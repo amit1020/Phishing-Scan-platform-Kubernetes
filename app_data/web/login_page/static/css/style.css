@@ -1,0 +1,296 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+
+
+}
+
+.title h2 {
+    font-size: 36px;
+    font-family: 'Lato', sans-serif;
+    margin-top: 10em;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    /* Stryling the text and giving it gradiant */
+    color: #ffffff;
+    background: -webkit-linear-gradient(#eee, #333);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 6px 6px 0px rgba(0, 0, 0, 0.2);
+    /* Make sure text is infront of background images */
+    display: block;
+    position: relative;
+    z-index: 3;
+}
+
+@keyframes move-twink-back {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: -10000px 5000px;
+    }
+}
+
+@keyframes move-clouds-back {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: 10000px 0;
+    }
+}
+
+.stars,
+.twinkling,
+.clouds {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 45%;
+    height: 100%;
+    display: block;
+}
+
+.stars {
+    background: #000 url(../images/stars.png) repeat top center;
+    z-index: 0;
+}
+
+.twinkling {
+    background: transparent url(../images/twinkling.png) repeat top center;
+    z-index: 1;
+    animation: move-twink-back 200s linear infinite;
+}
+
+.video-container {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 60%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* שומר על יחס גובה-רוחב של הווידאו וממלא את המסך */
+    pointer-events: none;
+    /* מונע מהמשתמש לקיים אינטראקציה עם הווידאו */
+}
+
+
+/* Login box code */
+
+@property --a 
+{
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+
+}
+
+.box
+{
+    top: 30%;
+    left: 23%;
+    position: relative;
+    width: 400px;
+    height: 200px;
+    background: repeating-conic-gradient(
+        from var(--a),
+        rgb(4, 17, 169) 0 0%,
+        rgb(4, 17, 169) 0 5%,
+        transparent 5%, transparent 40%, rgb(4, 17, 169) 50%);
+   filter: drop-shadow(0 15px 50px #000);
+   border-radius: 20px;
+   animation: rotating 4s linear infinite;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   transition: 0.5s; /* Smooth transition, make the animation */
+}
+
+.box:hover
+{
+    width: 450px;
+    height: 500px;
+}
+
+@keyframes rotating {
+    0% {
+        --a: 0deg;
+    }
+    100% {
+        --a: 360deg;
+    }
+}
+
+
+.box::before
+{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-conic-gradient(
+        from var(--a),
+        #2238a5 0 0%,
+        #2238a5 0 5%,
+        transparent 5%, transparent 40%, #2238a5 50%);
+   filter: drop-shadow(0 15px 50px #000);
+   border-radius: 20px;
+   animation: rotating 4s linear infinite;
+   animation-delay: -1s;
+}
+
+.box::after
+{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    inset: 4px;
+    /* 2d2d39*/
+    background: #000000;
+    border-radius: 15px;
+    /* 25252b*/
+    border: 8px solid #000000;
+}
+
+.login
+{
+    position: absolute;
+    inset: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    box-shadow: 2px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+    transition: 0.5s;
+    color: #ffffff;
+    overflow: hidden;
+}
+
+.box:hover .login
+{
+    inset: 40px;
+}
+
+.loginBx
+{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    width: 70%;
+    transform: translateY(126px);
+    transition: 0.5s;
+}
+
+.box:hover .loginBx
+{
+    transform: translateY(0px);
+}
+
+   
+.loginBx h2
+{
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+}
+
+.loginBx h2 i
+{
+    color: #f00;
+    text-shadow: 0 0 5px #f00, 0 0 25px #f00;
+
+}
+
+/* https://www.youtube.com/watch?v=51IiJtEKBsc*/
+
+
+.loginBx input
+{
+    width: 100%;
+    padding: 10px 20px;
+    outline: none;
+    border: none;
+    font-size: 1em;
+    background: rgba(0, 0, 0, 0.1);
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    border-radius: 30px;
+    
+}
+
+.loginBx input::placeholder
+{
+    color: #999;
+}
+
+.loginBx input[type="submit"]
+{
+ 
+    color: #45f3ff;
+    border:none;
+    font-weight: 500;
+    color: #45f3ff;
+    cursor:pointer;
+    transition: 0.5s;
+}
+
+.loginBx input[type="submit"]:hover
+{
+ 
+    box-shadow: 0 0 10px #45f3ff, 
+    0 0 60px #45f3ff;
+}
+
+.group
+{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.group a 
+{
+    color: #fff;
+    text-decoration: none;
+}
+
+.group a:nth-child(2)
+{
+    color: #ff2770;
+    font-weight: 600;
+}
+
+
+

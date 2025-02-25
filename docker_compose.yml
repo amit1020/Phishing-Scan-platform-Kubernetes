@@ -1,0 +1,57 @@
+services:
+  my_sql:
+    image: mysql:8.0
+    container_name: phishing-scan-platform-db
+    env_file:
+      - app_data/.env_user_db # Load the .env file to the container
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - my_network
+    restart: always
+    command: --host_cache_size=0  # 👈 Fix for deprecated option
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+
+
+
+  redis:
+    image: redis:6.0
+    container_name: phishing-scan-platform-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - my_network
+    restart: always
+
+
+  web:
+    container_name: phishing-scan-platform-web
+    build: . 
+    depends_on:
+      my_sql:
+        condition: service_healthy #Wait for the my_sql service to be healthy 
+    environment:
+      MYSQL_HOST: phishing-scan-platform-db #Passes database host to the app
+      REDIS_HOST: phishing-scan-platform-redis  # Pass Redis host to Flask
+      PYTHONPATH: /app
+      
+    ports:
+      - "1234:1234"
+    networks:
+      - my_network
+    command: ["sh", "-c", "/app/wait-for-connection.sh phishing-scan-platform-db 3306 python app.py"]
+
+
+
+    
+networks:
+  my_network: {}  #Create a network for the communication between the services
+
+volumes:
+  mysql_data:  
