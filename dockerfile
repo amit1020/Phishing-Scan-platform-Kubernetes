@@ -2,24 +2,27 @@
 FROM python:3.11-slim
 
 #Define args for the build
-#ARG API_URLSCAN
-#ARG API_virustotal
-#ARG REDIS_SECRET_KEY
-#ARG REDIS_HOST
-#ARG MYSQL_HOST
-#ARG MYSQL_DATABASE
-#ARG MYSQL_USER
-#ARG MYSQL_PASSWORD
+ARG API_URLSCAN
+ARG API_virustotal
+ARG REDIS_SECRET_KEY
+ARG REDIS_HOST
+ARG MYSQL_HOST
+ARG MYSQL_DATABASE
+ARG MYSQL_USER
+ARG MYSQL_PASSWORD
+#!Delete this, When I use RDS I will not user admin password
+ARG MYSQL_ROOT_PASSWORD 
 
-#ENV API_URLSCAN=$API_URLSCAN \
-#    API_VIRUSTOTAL=$API_VIRUSTOTAL \
-#    REDIS_SECRET_KEY=$REDIS_SECRET_KEY \
-#    REDIS_HOST=$REDIS_HOST \
-#    MYSQL_HOST=$MYSQL_HOST \
-#    MYSQL_DATABASE=$MYSQL_DATABASE \
-#    MYSQL_USER=$MYSQL_USER \
-#    MYSQL_PASSWORD=$MYSQL_PASSWORD
-
+# Convert ARG to ENV for runtime access
+ENV API_URLSCAN=${API_URLSCAN} \
+    API_VIRUSTOTAL=${API_VIRUSTOTAL} \
+    REDIS_SECRET_KEY=${REDIS_SECRET_KEY} \
+    REDIS_HOST=${REDIS_HOST} \
+    MYSQL_HOST=${MYSQL_HOST} \
+    MYSQL_DATABASE=${MYSQL_DATABASE} \
+    MYSQL_USER=${MYSQL_USER} \
+    MYSQL_PASSWORD=${MYSQL_PASSWORD} \
+    MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
 
 
 # Install MySQL client and netcat
@@ -35,11 +38,14 @@ openssl genpkey -algorithm RSA -out ./keys/Private.pem -pkeyopt rsa_keygen_bits:
 openssl rsa -in ./keys/Private.pem -pubout -out ./keys/Public.pem
 
 
-RUN touch .env_api1 .env_app1 .user_db1
-
-
-
-
+RUN echo "virustotal=${API_VIRUSTOTAL}" > /app/.env_api && \
+    echo "urlscan=${API_URLSCAN}" >> /app/.env_api && \
+    echo "SECRET_KEY=${REDIS_SECRET_KEY}" > /app/.env_app && \
+    echo "REDIS_HOST=${REDIS_HOST}" >> /app/.env_app && \
+    echo "MYSQL_HOST=${MYSQL_HOST}" > /app/.env_user_db && \
+    echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> /app/.env_user_db && \
+    echo "MYSQL_USER=${MYSQL_USER}" >> /app/.env_user_db && \
+    echo "MYSQL_PASSWORD=${MYSQL_PASSWORD}" >> /app/.env_user_db #need to delete this when I use RDS
 
 
 # Copy requirements and install dependencies
@@ -60,4 +66,4 @@ COPY ./app_data/ /app
 
 
 # Run the application
-CMD ["sh", "-c", "/app/wait-for-connection.sh phishing-scan-platform-db 3306 -- python app.py"]
+CMD ["sh", "-c", "python app.py"]
