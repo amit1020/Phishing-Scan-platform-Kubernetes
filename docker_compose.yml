@@ -35,15 +35,15 @@ services:
     build: 
       context: .  
       args:
-          API_URLSCAN: "63b48894-7ef7-427c-bfac-6228677359aa"
-          API_virustotal: "2630fd1d18e53d86324257c399faa8a223dfdcaa7753be96dc160dd08829a269"
-          REDIS_SECRET_KEY: "4c~Rv/b,19w*£[F-IDN{nL5"
-          REDIS_HOST: "phishing-scan-platform-redis"
-          MYSQL_HOST: "phishing-scan-platform-db"
-          MYSQL_DATABASE: "Phishing_Database"
-          MYSQL_USER: "amit1020_admin_db"
-          MYSQL_PASSWORD: "78b8t23b8te8b3x298b"
-          MYSQL_ROOT_PASSWORD: "78b8t23b8te8b3x298b"
+          API_URLSCAN: ""
+          API_virustotal: ""
+          REDIS_SECRET_KEY: ""
+          REDIS_HOST: ""
+          MYSQL_HOST: ""
+          MYSQL_DATABASE: ""
+          MYSQL_USER: ""
+          MYSQL_PASSWORD: ""
+          MYSQL_ROOT_PASSWORD: ""
     
     depends_on:
       my_sql:
