@@ -1,0 +1,19 @@
+ {'virustotal': 
+	{'malicious_count': 0, 
+	'suspicious_count': 0, 
+	'harmless_count': 70, 
+	'undetected_count': 26,
+	'timeout_count': 0,
+	'reputation': 71, 
+	'total-votes-harmless': 14, 
+	'total-votes-malicious': 6, 
+	'categories': {'BitDefender': 'jobsearch', 'Xcitium Verdict Cloud': 'professional networking ', 'Sophos': 'business networking', 'Forcepoint ThreatSeeker': 'social web - linkedin'}
+	}, 
+ 
+ 'urlscan': 
+	{
+	'url': 'https://www.linkedin.com/', 
+	'domain': 'www.linkedin.com',
+	'country': 'US',
+	'malicious': False, 
+	'score': 0}}

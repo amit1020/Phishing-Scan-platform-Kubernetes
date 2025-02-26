@@ -1,0 +1,23 @@
+flask >= 1.1.2
+requests >= 2.24.0
+configparser >= 5.0.0
+mysql-connector-python >= 9.1.0 
+pandas >= 1.1.0
+flask-login >= 0.5.0 # for user authentication
+flask-session >= 0.3.2 # for session management
+redis >= 3.5.3 # for session management
+email-validator >= 1.1.1 # for email validation
+phonenumbers >= 8.12.20 # for phone number validation
+
+
+# for two factor authentication
+pyotp >= 2.4.0 # for two factor authentication
+qrcode >= 6.1 # for generating qr code - 2FA
+Pillow >= 7.2.0 # for generating qr code - 2FA
+python-dotenv >= 0.14.0 # for loading environment variables from .env file
+
+
+
+#for secure 
+bcrypt >= 3.2.0 # for password hashing
+pycryptodome >= 3.9.8 # for encryption and decryption

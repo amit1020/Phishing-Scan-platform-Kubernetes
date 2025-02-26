@@ -1,0 +1,8 @@
+/app_data/keys/Private.pem
+/app_data/keys/Public.pem
+/app_data/.env_api
+/app_data/.env_app
+/app_data/.env_user_db
+README.md
+LICENSE 
+.gitignore
