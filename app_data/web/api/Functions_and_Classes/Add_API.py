@@ -45,8 +45,8 @@ def connect_with_retry(func):
                     #creates the connection var 
                 connection = mysql.connector.connect(
                     host=os.getenv("MYSQL_HOST"),
-                    user="root",
-                    password=os.getenv("MYSQL_ROOT_PASSWORD"),
+                    user=os.getenv("MYSQL_USER"),
+                    password=os.getenv("MYSQL_PASSWORD"),
                     database=os.getenv("MYSQL_DATABASE"),
                     port=int(os.getenv("MYSQL_PORT", "3306")),
                     charset="utf8mb4"

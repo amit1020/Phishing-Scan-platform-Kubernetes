@@ -35,8 +35,8 @@ services:
     build: 
       context: .  
       args:
+          API_VIRUSTOTAL: ""
           API_URLSCAN: ""
-          API_virustotal: ""
           REDIS_SECRET_KEY: ""
           REDIS_HOST: ""
           MYSQL_HOST: ""
