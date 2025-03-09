@@ -12,6 +12,7 @@ def Create_App():
     
     env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.env_app"))
     load_dotenv(env_path)
+    print(os.getenv('REDIS_HOST').split(":")[0], flush=True)
         
     app.secret_key = os.getenv('SECRET_KEY')
     # Configure Flask-Session
