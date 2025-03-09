@@ -25,7 +25,7 @@ class Database_Connection_Class:
         
 
 
-        self.host = os.getenv("MYSQL_HOST", "-----")
+        self.host = os.getenv("MYSQL_HOST", "-----").split(":")[0]
         print(self.host)
         self.user = os.getenv("MYSQL_USER", "------")
         print(self.user)
