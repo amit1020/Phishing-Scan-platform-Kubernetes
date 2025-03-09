@@ -22,7 +22,6 @@ except ImportError as e:
 
 
 
-
 @API_bp.route('/UserLogin/', methods=['POST'])
 def UserLogin():
     if request.method == 'POST':

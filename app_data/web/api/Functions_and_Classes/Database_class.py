@@ -44,31 +44,63 @@ class Database_Connection_Class:
 
     #Try to connects the dayabase with multiple retries
     def connect_with_retry(self, retries=10, delay=5):
-        for attempt in range(retries):
-            try:
-                #print(f" Attempting MySQL connection (Try {attempt + 1}/{retries})...")
-                #creates the connection var 
-                self.connection = mysql.connector.connect(
-                    host=self.host,
-                    user=self.user,
-                    password=self.password,
-                    database=self.database,
-                    port=self.port,
-                    charset="utf8mb4"
-                )
-                
-                if self.connection.is_connected():
-                    #?If the connection is success, create the cursor and build the database
-                    self.mycursor = self.connection.cursor()
-                    self.Build_database()
-                    
-                return
-            except mysql.connector.Error as err:
-                time.sleep(delay)
-        #If the connection is unable to connect after multiple retries, raise an exception 
-        raise Exception("MySQL is not available after multiple retries.")
+            """Attempts to connect to MySQL with retries and ensures the database exists."""
+            for attempt in range(1, retries + 1):
+                try:
+                    print(f"🔄 Attempt {attempt}/{retries}: Connecting to MySQL...")
+
+                    # Step 1: First, connect WITHOUT specifying a database
+                    temp_connection = mysql.connector.connect(
+                        host=self.host,
+                        user=self.user,
+                        password=self.password,
+                        port=self.port,
+                        charset="utf8mb4"
+                    )
+
+                    temp_cursor = temp_connection.cursor()
+
+                    # Step 2: Check if the database exists
+                    temp_cursor.execute("SHOW DATABASES;")
+                    databases = [db[0] for db in temp_cursor.fetchall()]
+
+                    if self.database not in databases:
+                        print(f"⚠️ Database '{self.database}' not found. Creating it now...")
+                        temp_cursor.execute(f"CREATE DATABASE {self.database};")
+                        print(f"✅ Database '{self.database}' created successfully.")
+
+                    # Close temporary connection
+                    temp_cursor.close()
+                    temp_connection.close()
+
+                    # Step 3: Reconnect with the newly created database
+                    self.connection = mysql.connector.connect(
+                        host=self.host,
+                        user=self.user,
+                        password=self.password,
+                        database=self.database,
+                        port=self.port,
+                        charset="utf8mb4"
+                    )
+
+                    if self.connection.is_connected():
+                        print(f"✅ Successfully connected to '{self.database}'!")
+
+                        # Create cursor AFTER successful connection
+                        self.mycursor = self.connection.cursor()
+
+                        # Step 4: Run any required setup
+                        self.Build_database()  # Ensure this function exists
+                        
+                        return  # Exit function after successful connection
+
+                except mysql.connector.Error as err:
+                    print(f"⚠️ Connection attempt {attempt} failed: {err}")
+                    time.sleep(delay)  # Wait before retrying
+
+            # If all retries fail, raise an exception
+            raise Exception("❌ MySQL is not available after multiple retries.")
     
- 
     #!Test function 
     def Get_Connection_Status(self):
         return self.connection.is_connected()

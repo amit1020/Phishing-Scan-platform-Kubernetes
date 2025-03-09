@@ -10,12 +10,13 @@ from Crypto.Cipher import PKCS1_OAEP
 from binascii import hexlify
 import base64
 
+# Reconfigure stdout to handle utf-8 encoding
 sys.stdout.reconfigure(encoding='utf-8')
 
-
+# List of APIs to be added
 API_LIST = ['virustotal','urlscan']
 
-
+# Function to encrypt a message using RSA public key
 def encrypt_message(message: str) -> str:
     public_key_path = Path(__file__).parent.parent.parent.parent / "keys" / "Public.pem"
     
@@ -27,11 +28,7 @@ def encrypt_message(message: str) -> str:
 
     return base64.b64encode(encrypted_data).decode("utf-8")  # Properly encode to Base64
 
-    
-
-
-
-
+# Decorator to retry MySQL connection
 def connect_with_retry(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -41,8 +38,7 @@ def connect_with_retry(func):
             try:
                 env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../.env_user_db"))
                 load_dotenv(env_path)
-                    #print(f" Attempting MySQL connection (Try {attempt + 1}/{retries})...")
-                    #creates the connection var 
+                # Attempting MySQL connection
                 connection = mysql.connector.connect(
                     host=os.getenv("MYSQL_HOST"),
                     user=os.getenv("MYSQL_USER"),
@@ -53,26 +49,21 @@ def connect_with_retry(func):
                 )
                     
                 if connection.is_connected():
-                    #?If the connection is success, create the cursor and build the database
+                    # If the connection is successful, execute the function
                     func(connection)
                     return 
-                   
                     
             except mysql.connector.Error as err:
                 time.sleep(delay)
-        #If the connection is unable to connect after multiple retries, raise an exception 
+        # If the connection is unable to connect after multiple retries, raise an exception 
         raise Exception("MySQL is not available after multiple retries.")
     return wrapper
 
-
-
-
-
-
+# Function to add API values to the database
 @connect_with_retry
 def add_api_values(connection_):
     
-    #*Get the data from the env file
+    # Get the data from the env file
     api_env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../.env_api"))
     load_dotenv(api_env_path)
 
@@ -84,16 +75,13 @@ def add_api_values(connection_):
             sql = "INSERT INTO API_Table (api_website_name, value) VALUES (%s, %s)"
             
             print(_,os.getenv(_),flush=True)
-            en_data = encrypt_message(os.getenv(_))#Encrypt the API key
+            en_data = encrypt_message(os.getenv(_))  # Encrypt the API key
             val = (_,en_data)
             mycursor.execute(sql, val)
             connection_.commit()
         except Error as e:
             print(f"Error: '{e}'")
             pass
-    
-    
-    
 #add_api_values()        
 
     
