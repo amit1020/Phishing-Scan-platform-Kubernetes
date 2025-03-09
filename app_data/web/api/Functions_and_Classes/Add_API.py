@@ -28,39 +28,9 @@ def encrypt_message(message: str) -> str:
 
     return base64.b64encode(encrypted_data).decode("utf-8")  # Properly encode to Base64
 
-# Decorator to retry MySQL connection
-def connect_with_retry(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        delay=5
-        retries=10
-        for attempt in range(retries):
-            try:
-                env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../.env_user_db"))
-                load_dotenv(env_path)
-                # Attempting MySQL connection
-                connection = mysql.connector.connect(
-                    host=os.getenv("MYSQL_HOST"),
-                    user=os.getenv("MYSQL_USER"),
-                    password=os.getenv("MYSQL_PASSWORD"),
-                    database=os.getenv("MYSQL_DATABASE"),
-                    port=int(os.getenv("MYSQL_PORT", "3306")),
-                    charset="utf8mb4"
-                )
-                    
-                if connection.is_connected():
-                    # If the connection is successful, execute the function
-                    func(connection)
-                    return 
-                    
-            except mysql.connector.Error as err:
-                time.sleep(delay)
-        # If the connection is unable to connect after multiple retries, raise an exception 
-        raise Exception("MySQL is not available after multiple retries.")
-    return wrapper
+
 
 # Function to add API values to the database
-@connect_with_retry
 def add_api_values(connection_):
     
     # Get the data from the env file

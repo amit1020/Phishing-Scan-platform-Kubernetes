@@ -43,7 +43,8 @@ class Database_Connection_Class:
         sys.stdout.flush()
         
         if _virustotal_exist is None or _urlscan_exist is None:            
-            add_api_values()
+            add_api_values(self.connection)
+            print("APIs added",flush=True)
 
 
     #Try to connects the dayabase with multiple retries
