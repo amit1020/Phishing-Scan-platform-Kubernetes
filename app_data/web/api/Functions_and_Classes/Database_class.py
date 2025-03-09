@@ -26,8 +26,11 @@ class Database_Connection_Class:
 
 
         self.host = os.getenv("MYSQL_HOST", "-----")
+        print(self.host)
         self.user = os.getenv("MYSQL_USER", "------")
+        print(self.user)
         self.password = os.getenv("MYSQL_PASSWORD", "------")
+        print(self.password)
         self.port = int(os.getenv("MYSQL_PORT", "3306"))
         self.database = os.getenv("MYSQL_DATABASE", "------")
         self.connection = None
