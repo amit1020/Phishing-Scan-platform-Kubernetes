@@ -31,6 +31,7 @@ class Database_Connection_Class:
         self.port = int(os.getenv("MYSQL_PORT", "3306"))
         self.database = os.getenv("MYSQL_DATABASE", "------")
         self.connection = None
+        self.mycursor = None
 
         self.connect_with_retry()
         
