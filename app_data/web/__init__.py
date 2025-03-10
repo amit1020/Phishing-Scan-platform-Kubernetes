@@ -26,7 +26,7 @@ def Create_App():
         redis_client.ping()
         print("✅ Successfully connected to Redis", flush=True)
     except redis.exceptions.ConnectionError:
-        print("❌ Failed to connect to Redis", flush=True)
+        print(" Failed to connect to Redis", flush=True)
         sys.exit(1)  # Exit if Redis is not reachable
 
     app.secret_key = os.getenv('SECRET_KEY')
