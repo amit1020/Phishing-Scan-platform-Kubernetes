@@ -82,8 +82,13 @@ def Vertification_2FA():
         
         #Check if the OTP is valid
         if result:
-            session['user'] = username #For the session
-            print("jereeeeee", flush=True)
+            try:
+                session['user'] = username  # Store user in session
+            except Exception as e:
+                print(f"❌ Session storage error: {str(e)}", flush=True)
+                return jsonify({"error": "Session storage failure"}), 500
+            #session['user'] = username #For the session
+            #print("jereeeeee", flush=True)
             return jsonify({
                 "status": "Success",
                 "redirect": url_for('login_page.UserPage', _external=True)  # Send redirect URL
