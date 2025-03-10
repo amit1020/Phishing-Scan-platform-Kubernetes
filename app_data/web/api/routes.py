@@ -70,11 +70,13 @@ def Vertification_2FA():
 
         username = data.get("username")
         otp = data.get("otp")
+        print(username, otp, flush=True)
 
         if not username or not otp:
             return jsonify({"error": "Missing required fields"}), 400
 
         result =my_db.VertifyOTP(Name=username, OTP=otp)#Check if the OTP is valid
+        print(result, flush=True)
         
         if result == None:
             return jsonify({"error": "User not found"}), 404
@@ -96,6 +98,7 @@ def Vertification_2FA():
             
             #return jsonify({"status": "Success"}), 200
         else:
+            print("here---------------------------------------", flush=True)
             return jsonify({"status": "Failure"}), 401
 
     except Exception as e:
