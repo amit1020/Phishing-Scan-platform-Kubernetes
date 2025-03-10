@@ -37,7 +37,7 @@ def Create_App():
     app.config['SESSION_KEY_PREFIX'] = 'flask_session:'
     app.config['SESSION_REDIS'] = redis_host
         
-    Session(app)
+    sess = Session(app)
 
         
     
