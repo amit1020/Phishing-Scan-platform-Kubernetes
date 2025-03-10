@@ -111,31 +111,35 @@ class Database_Connection_Class:
         return self.connection.is_connected()
     
     
-    
-    def VertifyOTP(self,Name:str,OTP) -> bool:
-            try:
-                print(f'SELECT 2FA_key FROM Users_Table WHERE name="{Name.strip()}"', flush=True)
-                query = "SELECT 2FA_key FROM Users_Table WHERE name=%s"
-                self.mycursor.execute(query, (Name.strip(),))
-                
-                #self.mycursor.execute('SELECT 2FA_key FROM Users_Table WHERE name="%s"', (Name.strip(),))# get from the database all names of clients
-                result = self.mycursor.fetchall()  # Use fetchone() since we expect a single result
+    def VertifyOTP(self, Name: str, OTP) -> bool:
+        try:
+            Name = Name.strip()
+            print(Name, flush=True)  # Debugging output
+            print(self.check_or_get_data(table_name="Users_Table", columns="*", message_type="Get-data"), flush=True)  # Debugging output
 
-                print(result,flush=True)
-                
-                if result is None:
-                    print("No matching user found.", flush=True)
-                    return False  # No user found with the given name
-                print(f"{result[0][0]} + {verify_otp(secret_key=result[0][0],otp=OTP)}" ,flush=True)
-                return verify_otp(secret_key=result[0][0],otp=OTP)
-                
-                #return results[0][0]
-            except mysql.connector.Error as e:
-                print(f"Database Error: {e}", flush=True)
-                return False
-            except Exception as e:
-                print(e)
-                return False
+            query = "SELECT 2FA_key FROM Users_Table WHERE name=%s"
+            self.mycursor.execute(query, (Name,))
+            result = self.mycursor.fetchall()  
+
+            print(result, flush=True)  # Debugging output
+
+            if not result:  # Correct way to check if the result is empty
+                print("No matching user found.", flush=True)
+                return False  # No user found with the given name
+
+            secret_key = result[0][0]  # Extract the 2FA key safely
+            verification_result = verify_otp(secret_key=secret_key, otp=OTP)
+            print(f"{secret_key} + {verification_result}", flush=True)
+
+            return verification_result  # Return the verification result
+
+        except mysql.connector.Error as e:
+            print(f"Database Error: {e}", flush=True)
+            return False
+        except Exception as e:
+            print(f"Unexpected Error: {e}", flush=True)
+            return False
+
     
     
     
