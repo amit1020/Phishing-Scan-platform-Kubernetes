@@ -35,7 +35,7 @@ def Create_App():
     app.config['SESSION_PERMANENT'] = False
     app.config['SESSION_USE_SIGNER'] = True
     app.config['SESSION_KEY_PREFIX'] = 'flask_session:'
-    app.config['SESSION_REDIS'] = redis_host
+    app.config['SESSION_REDIS'] = redis_client
         
     sess = Session(app)
 
