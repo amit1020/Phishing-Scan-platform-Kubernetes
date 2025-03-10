@@ -114,8 +114,8 @@ class Database_Connection_Class:
     
     def VertifyOTP(self,Name:str,OTP) -> bool:
             try:
-                print("asdsadasdsadsadsaasd",flush=True)
-                self.mycursor.execute(f"SELECT 2FA_key FROM Users_Table WHERE name='{Name}'")# get from the database all names of clients
+                print(Name,flush=True)
+                self.mycursor.execute('SELECT 2FA_key FROM Users_Table WHERE name="%s"', (Name.strip(),))# get from the database all names of clients
                 result = self.mycursor.fetchone()  # Use fetchone() since we expect a single result
 
                 print(result,flush=True)
