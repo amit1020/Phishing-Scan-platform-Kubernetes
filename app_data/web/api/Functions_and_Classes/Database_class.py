@@ -113,23 +113,26 @@ class Database_Connection_Class:
     
     
     def VertifyOTP(self,Name:str,OTP) -> bool:
-        print(f"Name: {Name} + OTP: {OTP}",flush=True)
-        if Name is not None:
             try:
                 print("asdsadasdsadsadsaasd",flush=True)
                 self.mycursor.execute(f"SELECT 2FA_key FROM Users_Table WHERE name='{Name}'")# get from the database all names of clients
-                results = self.mycursor.fetchall()
-                if len(results) == 0:
-                    return False
-                print(f"{results[0][0]} + {verify_otp(secret_key=results[0][0],otp=OTP)}" ,flush=True)
-                return verify_otp(secret_key=results[0][0],otp=OTP)
+                result = self.mycursor.fetchone()  # Use fetchone() since we expect a single result
+
+                print(result,flush=True)
+                
+                if result is None:
+                    print("No matching user found.", flush=True)
+                    return False  # No user found with the given name
+                print(f"{result[0][0]} + {verify_otp(secret_key=result[0][0],otp=OTP)}" ,flush=True)
+                return verify_otp(secret_key=result[0][0],otp=OTP)
                 
                 #return results[0][0]
-            
+            except mysql.connector.Error as e:
+                print(f"Database Error: {e}", flush=True)
+                return False
             except Exception as e:
                 print(e)
                 return False
-        return False
     
     
     
