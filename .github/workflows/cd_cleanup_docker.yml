@@ -1,0 +1,66 @@
+name: Cleanup DockerHub and Helm Charts
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "yes" to cleanup DockerHub'
+        required: true
+        default: 'no'
+
+jobs:
+  cleanup:
+    if: ${{ github.event.inputs.confirm == 'yes' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+
+      - name: Cleanup DockerHub repository
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_TOKEN }}
+        run: |
+          set -e
+          echo "Logging in to DockerHub..."
+          TOKEN=$(curl -s -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"username": "'"$DOCKER_USERNAME"'", "password": "'"$DOCKER_PASSWORD"'"}' \
+            https://hub.docker.com/v2/users/login/ | jq -r .token)
+          if [ -z "$TOKEN" ] || [ "$TOKEN" == "null" ]; then
+            echo "Failed to retrieve token"
+            exit 1
+          fi
+
+          REPO="amit1020/phishing-scan-platform-kube"
+          echo "Fetching tags for repository $REPO..."
+
+          # Fetch up to 100 tags, sort by last_updated (newest first)
+          TAGS=$(curl -s -H "Authorization: JWT $TOKEN" \
+            "https://hub.docker.com/v2/repositories/$REPO/tags/?page_size=100" \
+            | jq -r '.results | sort_by(.last_updated) | reverse | .[].name')
+
+          echo "All tags:"
+          echo "$TAGS"
+
+          # Keep only the latest 5 tags
+          KEEP_TAGS=$(echo "$TAGS" | head -n 5)
+          echo "Tags to keep (latest 5):"
+          echo "$KEEP_TAGS"
+
+          # Delete any tag not in the keep list
+          for tag in $TAGS; do
+            if echo "$KEEP_TAGS" | grep -qx "$tag"; then
+              echo "Keeping tag: $tag"
+            else
+              echo "Deleting tag: $tag"
+              curl -s -X DELETE -H "Authorization: JWT $TOKEN" \
+                "https://hub.docker.com/v2/repositories/$REPO/tags/$tag/"
+            fi
+          done
+
+          echo "DockerHub cleanup completed."
