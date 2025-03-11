@@ -23,10 +23,22 @@ jobs:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_TOKEN }}
       
-    - name: Build Docker image
+    - name: Build Docker image and tag with version|latest
       run: |
-        docker build -t amit1020/phishing-scan-platform-kube:latest .
+        VERSION=v1.0.${{ github.run_number }}
+        docker build --no-cache -t amit1020/phishing-scan-platform-kube:$VERSION .
+        docker tag amit1020/phishing-scan-platform-kube:$VERSION amit1020/phishing-scan-platform-kube:latest  # Tagging the image as latest
+        
+        
 
     - name: Push Docker image
       run: |
+        VERSION=v1.0.${{ github.run_number }}
+        docker push amit1020/phishing-scan-platform-kube:$VERSION
         docker push amit1020/phishing-scan-platform-kube:latest 
+
+
+
+
+
+   

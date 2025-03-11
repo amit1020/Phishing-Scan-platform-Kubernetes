@@ -26,11 +26,8 @@ class Database_Connection_Class:
 
 
         self.host = os.getenv("MYSQL_HOST", "-----").split(":")[0]
-        print(self.host)
         self.user = os.getenv("MYSQL_USER", "------")
-        print(self.user)
         self.password = os.getenv("MYSQL_PASSWORD", "------")
-        print(self.password)
         self.port = int(os.getenv("MYSQL_PORT", "3306"))
         self.database = os.getenv("MYSQL_DATABASE", "------")
         self.connection = None
@@ -44,7 +41,7 @@ class Database_Connection_Class:
         
         if _virustotal_exist is None or _urlscan_exist is None:            
             add_api_values(self.connection)
-            print("APIs added",flush=True)
+            #print("APIs added",flush=True)
 
 
     #Try to connects the dayabase with multiple retries
@@ -52,7 +49,7 @@ class Database_Connection_Class:
             """Attempts to connect to MySQL with retries and ensures the database exists."""
             for attempt in range(1, retries + 1):
                 try:
-                    print(f"🔄 Attempt {attempt}/{retries}: Connecting to MySQL...")
+                    #print(f"🔄 Attempt {attempt}/{retries}: Connecting to MySQL...")
 
                     # Step 1: First, connect WITHOUT specifying a database
                     temp_connection = mysql.connector.connect(
@@ -70,9 +67,9 @@ class Database_Connection_Class:
                     databases = [db[0] for db in temp_cursor.fetchall()]
 
                     if self.database not in databases:
-                        print(f"⚠️ Database '{self.database}' not found. Creating it now...")
+                        #print(f"⚠️ Database '{self.database}' not found. Creating it now...")
                         temp_cursor.execute(f"CREATE DATABASE {self.database};")
-                        print(f"✅ Database '{self.database}' created successfully.")
+                        #print(f"✅ Database '{self.database}' created successfully.")
 
                     # Close temporary connection
                     temp_cursor.close()
@@ -89,7 +86,7 @@ class Database_Connection_Class:
                     )
 
                     if self.connection.is_connected():
-                        print(f"✅ Successfully connected to '{self.database}'!")
+                        #print(f"✅ Successfully connected to '{self.database}'!")
 
                         # Create cursor AFTER successful connection
                         self.mycursor = self.connection.cursor()
@@ -100,7 +97,7 @@ class Database_Connection_Class:
                         return  # Exit function after successful connection
 
                 except mysql.connector.Error as err:
-                    print(f"⚠️ Connection attempt {attempt} failed: {err}")
+                    #print(f"⚠️ Connection attempt {attempt} failed: {err}")
                     time.sleep(delay)  # Wait before retrying
 
             # If all retries fail, raise an exception
@@ -114,30 +111,27 @@ class Database_Connection_Class:
     def VertifyOTP(self, Name: str, OTP) -> bool:
         try:
             Name = Name.strip()
-            print(Name, flush=True)  # Debugging output
-            print(self.check_or_get_data(table_name="Users_Table", columns="*", message_type="Get-data"), flush=True)  # Debugging output
-
             query = "SELECT 2FA_key FROM Users_Table WHERE name=%s"
             self.mycursor.execute(query, (Name,))
             result = self.mycursor.fetchall()  
 
-            print(result, flush=True)  # Debugging output
+            #print(result, flush=True)  # Debugging output
 
             if not result:  # Correct way to check if the result is empty
-                print("No matching user found.", flush=True)
+                #print("No matching user found.", flush=True)
                 return False  # No user found with the given name
 
             secret_key = result[0][0]  # Extract the 2FA key safely
             verification_result = verify_otp(secret_key=secret_key, otp=OTP)
-            print(f"{secret_key} + {verification_result}", flush=True)
+            #print(f"{secret_key} + {verification_result}", flush=True)
 
             return verification_result  # Return the verification result
 
         except mysql.connector.Error as e:
-            print(f"Database Error: {e}", flush=True)
+            #print(f"Database Error: {e}", flush=True)
             return False
         except Exception as e:
-            print(f"Unexpected Error: {e}", flush=True)
+            #print(f"Unexpected Error: {e}", flush=True)
             return False
 
     
@@ -198,7 +192,7 @@ class Database_Connection_Class:
                 return rows
             
             except Exception as e:
-                print(e)
+                #print(e)
                 return None
         return None
     
@@ -219,7 +213,7 @@ class Database_Connection_Class:
                 return True
 
             except Exception as error:
-                print(f"{error}")
+                #print(f"{error}")
                 #return f"Error to add new client - {Data['name']} code problem:\n[!] {error}"
         
                 return False
@@ -279,7 +273,7 @@ class Database_Connection_Class:
             self.mycursor.close()
         if hasattr(self, 'connection') and self.connection:
             self.connection.close()
-            print("The connection is closed")
+            #print("The connection is closed")
     #?NEED TO UNDERSTANT MORE
     def __enter__(self):
         return self

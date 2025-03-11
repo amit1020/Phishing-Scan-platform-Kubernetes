@@ -17,7 +17,7 @@ try:
     my_db = Database_Connection_Class()#Create an instance of the Database_Connection_Class
     
 except ImportError as e:
-    print(f"Error importing Database_Class: {e}", file=sys.stderr)
+    #print(f"Error importing Database_Class: {e}", file=sys.stderr)
     sys.exit(1)
 
 
@@ -45,13 +45,13 @@ def UserLogin():
             if result is None:
                 return jsonify({"error": "Incorrect information"}), 404
             
-            print(result[0][2], flush=True)
+            #print(result[0][2], flush=True)
             if password != result[0][2]:
                 
                 return jsonify({"error": "Incorrect information"}), 401
             
             
-            print("Success", flush=True)
+            #print("Success", flush=True)
             return jsonify({"status": "Success"}), 200
 
         except Exception as e:
@@ -70,13 +70,13 @@ def Vertification_2FA():
 
         username = data.get("username")
         otp = data.get("otp")
-        print(username, otp, flush=True)
+        #print(username, otp, flush=True)
 
         if not username or not otp:
             return jsonify({"error": "Missing required fields"}), 400
 
         result =my_db.VertifyOTP(Name=username, OTP=otp)#Check if the OTP is valid
-        print(result, flush=True)
+        #print(result, flush=True)
         
         if result == None:
             return jsonify({"error": "User not found"}), 404
@@ -87,7 +87,7 @@ def Vertification_2FA():
             try:
                 session['user'] = username  # Store user in session
             except Exception as e:
-                print(f"❌ Session storage error: {str(e)}", flush=True)
+                #print(f"❌ Session storage error: {str(e)}", flush=True)
                 return jsonify({"error": "Session storage failure"}), 500
             #session['user'] = username #For the session
             #print("jereeeeee", flush=True)
