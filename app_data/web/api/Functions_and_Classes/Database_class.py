@@ -49,7 +49,7 @@ class Database_Connection_Class:
             """Attempts to connect to MySQL with retries and ensures the database exists."""
             for attempt in range(1, retries + 1):
                 try:
-                    #print(f"🔄 Attempt {attempt}/{retries}: Connecting to MySQL...")
+                    print(f"🔄 Attempt {attempt}/{retries}: Connecting to MySQL...")
 
                     # Step 1: First, connect WITHOUT specifying a database
                     temp_connection = mysql.connector.connect(
@@ -67,9 +67,9 @@ class Database_Connection_Class:
                     databases = [db[0] for db in temp_cursor.fetchall()]
 
                     if self.database not in databases:
-                        #print(f"⚠️ Database '{self.database}' not found. Creating it now...")
+                        print(f"⚠️ Database '{self.database}' not found. Creating it now...")
                         temp_cursor.execute(f"CREATE DATABASE {self.database};")
-                        #print(f"✅ Database '{self.database}' created successfully.")
+                        print(f"✅ Database '{self.database}' created successfully.")
 
                     # Close temporary connection
                     temp_cursor.close()
@@ -86,7 +86,7 @@ class Database_Connection_Class:
                     )
 
                     if self.connection.is_connected():
-                        #print(f"✅ Successfully connected to '{self.database}'!")
+                        print(f"✅ Successfully connected to '{self.database}'!")
 
                         # Create cursor AFTER successful connection
                         self.mycursor = self.connection.cursor()

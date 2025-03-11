@@ -26,19 +26,19 @@ def Create_App():
     
     #* set the secret key for the app
     if not secret_key:  # If SECRET_KEY is None or empty
-        #print("❌ SECRET_KEY not found, using default!")
+        print("❌ SECRET_KEY not found, using default!")
         secret_key = "default_secret_key"  #!  Need to change in production
 
     app.secret_key = secret_key  
-    #print(f"✅ SECRET_KEY set: {app.secret_key[:4]}****")  # Debugging
+    print(f"✅ SECRET_KEY set: {app.secret_key[:4]}****")  # Debugging
     
     
     try:
         redis_client = redis.StrictRedis(host=redis_host, port=6379, db=0, decode_responses=False)
         redis_client.ping()
-        #print("✅ Successfully connected to Redis", flush=True)
+        print("✅ Successfully connected to Redis", flush=True)
     except redis.exceptions.ConnectionError:
-        #print(" Failed to connect to Redis", flush=True)
+        print(" Failed to connect to Redis", flush=True)
         sys.exit(1)  # Exit if Redis is not reachable
 
     # Configure Flask-Session
