@@ -24,7 +24,7 @@ def Create_App():
 
     secret_key = os.getenv('SECRET_KEY')
     
-    #? set the secret key for the app
+    #* set the secret key for the app
     if not secret_key:  # If SECRET_KEY is None or empty
         print("❌ SECRET_KEY not found, using default!")
         secret_key = "default_secret_key"  #!  Need to change in production
@@ -34,7 +34,7 @@ def Create_App():
     
     
     try:
-        redis_client = redis.StrictRedis(host=redis_host, port=6379, db=0, decode_responses=True)
+        redis_client = redis.StrictRedis(host=redis_host, port=6379, db=0, decode_responses=False)
         redis_client.ping()
         print("✅ Successfully connected to Redis", flush=True)
     except redis.exceptions.ConnectionError:
