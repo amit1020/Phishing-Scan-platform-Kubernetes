@@ -60,7 +60,7 @@ cd PhishingScanPlatform
 
 Provide these parameters as environment variables or command-line arguments:
 
-- [API_VIRUSTOTAL](https://virustotal.com) (VirusTotal API Key)
+- [API_VIRUSTOTAL](https://virustotal.com) 
 - [API_URLSCAN](https://urlscan.io)
 - REDIS_SECRET_KEY  
 - REDIS_HOST  
@@ -99,7 +99,6 @@ PhishingScanPlatform/
 ```
 
 - `.github/workflows/`: GitHub Actions workflows  
-- `.vscode/`: VS Code configs  
 - `README_files/`: Assets related to the README  
 - `.dockerignore`: Files to ignore during Docker build  
 - `docker_compose.yml`: Defines containers/services  
@@ -121,6 +120,10 @@ app_data/
 - `keys/`: Storage for keys  
 - `venv/`: Python virtual environment  
 - `web/`: Main application folder  
+- `requirements2.txt` : This project requires certain Python packages to be installed. You can install them using:
+```sh
+pip install -r requirements2.txt
+```
 
 ### web folder
 
