@@ -23,11 +23,14 @@ def Create_App():
         
 
     secret_key = os.getenv('SECRET_KEY')
+    
+    #? set the secret key for the app
     if not secret_key:  # If SECRET_KEY is None or empty
         print("❌ SECRET_KEY not found, using default!")
-        secret_key = "default_secret_key"  # Change this for production!
+        secret_key = "default_secret_key"  #!  Need to change in production
 
-    app.secret_key = secret_key  # ✅ Correct way to assign SECRET_KEY
+    app.secret_key = secret_key  
+    print(f"✅ SECRET_KEY set: {app.secret_key[:4]}****")  # Debugging
     
     
     try:
@@ -38,10 +41,9 @@ def Create_App():
         print(" Failed to connect to Redis", flush=True)
         sys.exit(1)  # Exit if Redis is not reachable
 
-    app.secret_key = os.getenv('SECRET_KEY')
     # Configure Flask-Session
     app.config['SESSION_TYPE'] = 'redis'
-    app.config['SESSION_PERMANENT'] = False
+    app.config['SESSION_PERMANENT'] = False #check app.config['SESSION_USE_SIGNER'] = False
     app.config['SESSION_USE_SIGNER'] = True
     app.config['SESSION_KEY_PREFIX'] = 'flask_session:'
     app.config['SESSION_REDIS'] = redis_client
