@@ -77,24 +77,31 @@ function Move_between_sections(sec){
 
     
     async function VertifyOTP_UserLogin() {
-        //The meaning of this line is to get the current URL of the page and add the path to the API
-        let url = `${window.location.origin}/api/Vertification/2FA`;
+        let url = "/api/Vertification/2FA";
         let message_body = JSON.stringify({
             username: USER_NAME_TO_ENTER,
             otp: document.getElementById("OTP_login").value
         });
+    
+        console.log("🔄 Sending OTP verification request...");
+    
         const response = await Send_Data_(message_body, url);
     
-        if (response && response.status === "Success") {  
-            window.location.href = response.redirect;  // Use Flask's redirect URL
+        if (response) {
+            console.log("✅ Server Response:", response);
+    
+            if (response.status === "Success") {
+                console.log("✅ Redirecting to:", response.redirect);
+                window.location.href = response.redirect;  // Redirect on success
+            } else {
+                console.error("❌ OTP Failed:", response.error || "Invalid OTP");
+                alert("Invalid OTP, please try again.");
+            }
         } else {
-            console.error("Error");
+            console.error("❌ No response received from server.");
         }
     }
     
-
-
-
 
 
     async function registration_function() {
