@@ -21,6 +21,15 @@ def Create_App():
         redis_host = redis_host.split(":")[0]  # Extract hostname only
         
         
+
+    secret_key = os.getenv('SECRET_KEY')
+    if not secret_key:  # If SECRET_KEY is None or empty
+        print("❌ SECRET_KEY not found, using default!")
+        secret_key = "default_secret_key"  # Change this for production!
+
+    app.secret_key = secret_key  # ✅ Correct way to assign SECRET_KEY
+    
+    
     try:
         redis_client = redis.StrictRedis(host=redis_host, port=6379, db=0, decode_responses=True)
         redis_client.ping()
